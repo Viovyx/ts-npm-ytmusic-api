@@ -31,7 +31,7 @@ export const traverse = (data: any, ...keys: string[]) => {
         try {
             value = Array.isArray(value) ? value : [value]
             const highresThumbnail = getHighresThumbnail(value)
-            if (highresThumbnail != null) value.push(highresThumbnail)
+            if (highresThumbnail !== null) value.push(highresThumbnail)
         } catch (error) {
             console.error(error)
         }

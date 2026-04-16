@@ -10,47 +10,41 @@ export default function getHighresThumbnail(
 ): ThumbnailFull | null {
     if (thumbnails.length === 0) return null
 
-    // The highest resolution thumbnail given in the item
+    // Get the highest resolution thumbnail given in the list
     const highestOriginalThumb: ThumbnailFull = thumbnails.reduce(
         (prev, curr) =>
             curr.width * curr.height > prev.width * prev.height ? curr : prev,
     )
 
     let url: string = highestOriginalThumb.url
-
-    // Get the host, width and height of the highest original thumbnail
-    const host: string = new URL(highestOriginalThumb.url).host
     let width: number = highestOriginalThumb.width
     let height: number = highestOriginalThumb.height
+    const host: string = new URL(url).host
 
     switch (host) {
         case "lh3.googleusercontent.com":
-            // Replaces the width param with the highest resolution yt provides, removes other optional params
+            // Expected original url: https://lh3.googleusercontent.com/<some data>=w<original width>-h<original height>-p-l90-rj
+            // Example of new url: https://lh3.googleusercontent.com/<some data>=w<max width>
             width = 1200
             height = width
             url = url.split("=w")[0] + `=w${width}`
-            // Expected original url: https://lh3.googleusercontent.com/<some data>=w<original width>-h<original height>-p-l90-rj
-            // Example of new url: https://lh3.googleusercontent.com/<some data>=w<max width>
             break
 
         case "yt3.googleusercontent.com":
-            // Replaces the scale param with the highest resolution yt provides using width param, removes other optional params
+            // Expected original url: https://yt3.googleusercontent.com/<some data>=s<original width>
+            // Example of new url: https://yt3.googleusercontent.com/<some data>=w<max width>
             width = 1200
             height = width
             url = url.split("=s")[0] + `=w${width}`
-            // Expected original url: https://yt3.googleusercontent.com/<some data>=s<original width>
-            // Example of new url: https://yt3.googleusercontent.com/<some data>=w<max width>
             break
 
         case "i.ytimg.com":
-            // Changes sddefault.jpeg to maxresdefault.jpeg (best quality yt provides), remove optional params
+            // Expected original url: https://i.ytimg.com/vi/<some data>/sddefault.jpg?sqp=<some data>
+            // Example of new url: https://i.ytimg.com/vi/<some data>/maxresdefault.jpg
             width = 1280
             height = 720
             url = url.replace("sddefault", "maxresdefault")
             url = url.includes("?") ? url.split("?")[0]! : url
-
-            // Expected original url: https://i.ytimg.com/vi/<some data>/sddefault.jpg?sqp=<some data>
-            // Example of new url: https://i.ytimg.com/vi/<some data>/maxresdefault.jpg
             break
 
         default:

@@ -29,7 +29,6 @@ export const traverse = (data: any, ...keys: string[]) => {
     }
     if (lastKey == "thumbnails") {
         try {
-            // Normalize value to an array
             value = Array.isArray(value) ? value : [value]
             const highresThumbnail = getHighresThumbnail(value)
             if (highresThumbnail != null) value.push(highresThumbnail)

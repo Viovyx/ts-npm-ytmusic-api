@@ -27,7 +27,7 @@ export const traverse = (data: any, ...keys: string[]) => {
     for (const key of keys) {
         value = again(value, key, lastKey === key)
     }
-    if (lastKey == "thumbnails") {
+    if (lastKey === "thumbnails") {
         try {
             value = Array.isArray(value) ? value : [value]
             const highresThumbnail = getHighresThumbnail(value)
